@@ -1,9 +1,11 @@
 let express = require("express");
+let cors = require("cors");
 
 let PORT = 3001;
 let app = express();
 
 app.set("view engine", "ejs");
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
@@ -92,7 +94,29 @@ app.post("/api/persons", (req, res) => {
 	};
 
 	data.push(entry);
-	res.json(data);
+	res.status(200).json(data);
+});
+
+app.put("/api/presons-update/:id", (req, res) => {
+	let params = req.params;
+	let body = req.body;
+	console.log(body, params.id);
+	for (let i = 0; i < data.length; i++) {
+		if (data[i].id == params.id) {
+			if (body.name && body.number) {
+				data[i].name = body.name;
+				data[i].number = body.number;
+			} else if (body.name) {
+				data[i].name = body.name;
+			} else if (body.number) {
+				data[i].number = body.number;
+			}
+		}
+		return res.send(data);
+	}
+	res.status(400).json({
+		error: `No Entries found of id ${params.id}`,
+	});
 });
 
 app.listen(process.env.PORT || PORT, () => {
