@@ -1,8 +1,22 @@
 let express = require("express");
+let app = express();
+
 let cors = require("cors");
+const MongoClient = require("mongodb").MongoClient;
+require("dotenv").config();
 
 let PORT = 3001;
-let app = express();
+
+let db,
+	dbConnectionStr = process.env.DB_STRING,
+	dbName = "phone-book-entry";
+
+MongoClient.connect(dbConnectionStr, { useUnifiedTopology: true }).then(
+	(client) => {
+		console.log(`Connected to ${dbName} Database`);
+		db = client.db(dbName);
+	}
+);
 
 app.set("view engine", "ejs");
 app.use(cors());
@@ -10,33 +24,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.use(express.json());
 
-let data = [
-	{
-		id: 1,
-		name: "Arto Hellas",
-		number: "040-123456",
-	},
-	{
-		id: 2,
-		name: "Ada Lovelace",
-		number: "39-44-5323523",
-	},
-	{
-		id: 3,
-		name: "Dan Abramov",
-		number: "12-43-234345",
-	},
-	{
-		id: 4,
-		name: "Mary Poppendieck",
-		number: "39-23-6423122",
-	},
-];
-
-let date = new Date();
-
 app.get("/", (req, res) => {
-	res.render("index.ejs", { data: data });
+	db.collection("phone-book-entry")
+		.find()
+		.toArray()
+		.then((data) => {
+			res.render("index.ejs", { data: data });
+		})
+		.catch((error) => console.error(error));
 });
 
 app.get("/api/persons", (req, res) => {
@@ -56,48 +51,61 @@ app.get("/api/persons/:id", (req, res) => {
 	}
 });
 
-app.delete("/api/delete", (req, res) => {
-	for (let i = 0; i < data.length; i++) {
-		if (data[i].name == req.body.name && data[i].number == req.body.number) {
-			data.splice(i, 1);
-			res.json({ message: "Delete Successful" });
-			return;
-		}
+app.delete("/api/delete", async (req, res) => {
+	const body = req.body;
+	console.log(body);
+
+	let record = await db
+		.collection("phone-book-entry")
+		.findOne({ name: body.name });
+
+	if (!record) {
+		return res.status(400).json({
+			error: `No Entries found`,
+		});
 	}
-	res.status(400).json({
-		error: `No Entries found of id ${req.params.id}`,
-	});
+
+	db.collection("phone-book-entry")
+		.deleteOne({ name: body.name })
+		.then((result) => {
+			console.log(`Deletion Successful`);
+			return res.json({ message: "Delete Successful" });
+		});
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", async (req, res) => {
 	console.log(req.body);
 	const body = req.body;
 
-	for (let i = 0; i < data.length; i++) {
-		if (data[i].name == body.name) {
-			return res.status(403).json({
-				error: "name must be unique",
-			});
-		}
-	}
 	if (!body.name && !body.number) {
 		return res.status(400).json({
 			error: "content missing",
 		});
 	}
 
-	const generateId = () => Math.round(Math.random() * 100000);
+	let record = await db
+		.collection("phone-book-entry")
+		.findOne({ name: body.name });
+
+	if (record) {
+		return res.status(422).json({ error: "Entry Already exists" });
+	}
+
 	const entry = {
-		id: generateId(),
 		name: body.name,
 		number: body.number,
 	};
 
-	data.push(entry);
-	res.redirect("/");
+	db.collection("phone-book-entry")
+		.insertOne(entry)
+		.then((result) => {
+			console.log("Phone Book Entry Added");
+			res.redirect("/");
+		})
+		.catch((error) => console.error(error));
 });
 
-app.put("/api/presons-update", (req, res) => {
+app.put("/api/presons-update", async (req, res) => {
 	let body = req.body;
 	console.log(body);
 	if (body.name.length === 0) {
@@ -105,15 +113,43 @@ app.put("/api/presons-update", (req, res) => {
 			error: `Please Enter the name`,
 		});
 	}
-	for (let i = 0; i < data.length; i++) {
-		if (data[i].name == body.name) {
-			data[i].number = body.number;
-			return res.send(data);
-		}
+	if (!body.name && !body.number) {
+		return res.status(400).json({
+			error: "content missing",
+		});
 	}
-	res.status(400).json({
-		error: `No Entries found`,
-	});
+
+	let record = await db
+		.collection("phone-book-entry")
+		.findOne({ name: body.name });
+
+	if (!record) {
+		return res.status(400).json({
+			error: `No Entries found`,
+		});
+	}
+
+	db.collection("phone-book-entry")
+		.updateOne(
+			{
+				name: body.name,
+			},
+			{
+				$set: {
+					name: body.name,
+					number: body.number,
+				},
+			},
+			{
+				sort: { _id: -1 },
+				upsert: true,
+			}
+		)
+		.then((result) => {
+			console.log("Update Done");
+			res.json("Update Done");
+		})
+		.catch((error) => console.error(error));
 });
 
 app.listen(process.env.PORT || PORT, () => {

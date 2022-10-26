@@ -9,19 +9,39 @@
 	</head>
 	<body>
 		<h1>Welcome to Phone Book</h1>
-		<h2>Add A Rapper:</h2>
+		<h2>
+			Add A Phone Book Entry:
 
-		<form action="/api/persons" method="POST">
-			<input type="text" placeholder="Name of the person" name="name" />
-			<input type="number" placeholder="Enter the phone Number" name="number" />
-			<input type="submit" />
+			<img
+				src="https://img.icons8.com/ios/25/000000/add--v1.png"
+				class="add-button"
+			/>
+		</h2>
+
+		<form action="/api/persons" method="POST" class="form form-post-none">
+			<input
+				type="text"
+				placeholder="Name of the person"
+				required
+				name="name"
+				class="input"
+			/>
+			<br />
+			<input
+				type="text"
+				placeholder="Enter the phone Number"
+				required
+				name="number"
+				class="input"
+			/>
+			<br />
+			<input type="submit" class="button" />
 		</form>
 
 		<h2>Phone Book Table</h2>
 
 		<table>
 			<tr>
-				<th>Id</th>
 				<th>Name</th>
 				<th>Number</th>
 				<th>Edit</th>
@@ -30,7 +50,6 @@
 
 			<% for(var i = 0; i < data.length; i++) {%>
 			<tr>
-				<td><%= data[i].id %></td>
 				<td><%= data[i].name %></td>
 				<td><%= data[i].number %></td>
 				<td class="edit">
@@ -51,12 +70,13 @@
 			<h3>Update Your Number Here</h3>
 			<form>
 				<input
-					type="number"
+					type="text"
 					placeholder="Enter the phone Number to update"
 					required
 					name="number"
 					class="update-number"
 				/>
+				<br />
 				<input type="submit" class="update-submit" />
 			</form>
 		</div>
