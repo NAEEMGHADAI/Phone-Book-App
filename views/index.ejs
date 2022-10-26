@@ -9,6 +9,13 @@
 	</head>
 	<body>
 		<h1>Welcome to Phone Book</h1>
+		<h2>Add A Rapper:</h2>
+
+		<form action="/api/persons" method="POST">
+			<input type="text" placeholder="Name of the person" name="name" />
+			<input type="number" placeholder="Enter the phone Number" name="number" />
+			<input type="submit" />
+		</form>
 
 		<h2>Phone Book Table</h2>
 
@@ -17,6 +24,8 @@
 				<th>Id</th>
 				<th>Name</th>
 				<th>Number</th>
+				<th>Edit</th>
+				<th>Delete</th>
 			</tr>
 
 			<% for(var i = 0; i < data.length; i++) {%>
@@ -24,8 +33,33 @@
 				<td><%= data[i].id %></td>
 				<td><%= data[i].name %></td>
 				<td><%= data[i].number %></td>
+				<td class="edit">
+					<img
+						src="https://img.icons8.com/material-outlined/24/000000/edit.png"
+					/>
+				</td>
+				<td class="trash">
+					<img
+						src="https://img.icons8.com/material-rounded/24/000000/filled-trash.png"
+					/>
+				</td>
 			</tr>
+
 			<% } %>
 		</table>
+		<div class="form-update">
+			<h3>Update Your Number Here</h3>
+			<form>
+				<input
+					type="number"
+					placeholder="Enter the phone Number to update"
+					required
+					name="number"
+					class="update-number"
+				/>
+				<input type="submit" class="update-submit" />
+			</form>
+		</div>
+		<script src="/main.js"></script>
 	</body>
 </html>

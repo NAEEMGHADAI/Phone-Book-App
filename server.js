@@ -56,11 +56,11 @@ app.get("/api/persons/:id", (req, res) => {
 	}
 });
 
-app.delete("/api/delete/:id", (req, res) => {
+app.delete("/api/delete", (req, res) => {
 	for (let i = 0; i < data.length; i++) {
-		if (data[i].id == req.params.id) {
+		if (data[i].name == req.body.name && data[i].number == req.body.number) {
 			data.splice(i, 1);
-			res.send(data);
+			res.json({ message: "Delete Successful" });
 			return;
 		}
 	}
@@ -94,28 +94,25 @@ app.post("/api/persons", (req, res) => {
 	};
 
 	data.push(entry);
-	res.status(200).json(data);
+	res.redirect("/");
 });
 
-app.put("/api/presons-update/:id", (req, res) => {
-	let params = req.params;
+app.put("/api/presons-update", (req, res) => {
 	let body = req.body;
-	console.log(body, params.id);
+	console.log(body);
+	if (body.name.length === 0) {
+		res.status(400).json({
+			error: `Please Enter the name`,
+		});
+	}
 	for (let i = 0; i < data.length; i++) {
-		if (data[i].id == params.id) {
-			if (body.name && body.number) {
-				data[i].name = body.name;
-				data[i].number = body.number;
-			} else if (body.name) {
-				data[i].name = body.name;
-			} else if (body.number) {
-				data[i].number = body.number;
-			}
+		if (data[i].name == body.name) {
+			data[i].number = body.number;
+			return res.send(data);
 		}
-		return res.send(data);
 	}
 	res.status(400).json({
-		error: `No Entries found of id ${params.id}`,
+		error: `No Entries found`,
 	});
 });
 
