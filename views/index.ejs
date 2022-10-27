@@ -9,36 +9,41 @@
 	</head>
 	<body>
 		<h1>Welcome to Phone Book</h1>
-		<h2>
-			Add A Phone Book Entry:
 
-			<img
+		<div id="myModal" class="modal">
+			<!-- Modal content -->
+			<div class="modal-content">
+				<span class="close">&times;</span>
+				<form action="/api/persons" method="POST" class="form">
+					<h3>Add New Entry here</h3>
+					<input
+						type="text"
+						placeholder="Name of the person"
+						required
+						name="name"
+						class="input"
+					/>
+					<br />
+					<input
+						type="text"
+						placeholder="Enter the phone Number"
+						required
+						name="number"
+						class="input"
+					/>
+					<br />
+					<input type="submit" class="button" />
+				</form>
+			</div>
+		</div>
+
+		<h2>
+			Phone Book Table<img
 				src="https://img.icons8.com/ios/25/000000/add--v1.png"
 				class="add-button"
+				title="Add New Entry"
 			/>
 		</h2>
-
-		<form action="/api/persons" method="POST" class="form form-post-none">
-			<input
-				type="text"
-				placeholder="Name of the person"
-				required
-				name="name"
-				class="input"
-			/>
-			<br />
-			<input
-				type="text"
-				placeholder="Enter the phone Number"
-				required
-				name="number"
-				class="input"
-			/>
-			<br />
-			<input type="submit" class="button" />
-		</form>
-
-		<h2>Phone Book Table</h2>
 
 		<table>
 			<tr>
@@ -66,20 +71,26 @@
 
 			<% } %>
 		</table>
-		<div class="form-update">
-			<h3>Update Your Number Here</h3>
-			<form>
-				<input
-					type="text"
-					placeholder="Enter the phone Number to update"
-					required
-					name="number"
-					class="update-number"
-				/>
-				<br />
-				<input type="submit" class="update-submit" />
-			</form>
+		<div id="myModal2" class="modal">
+			<!-- Modal content -->
+			<div class="modal-content">
+				<span class="close">&times;</span>
+
+				<form>
+					<h3>Update Your Number Here</h3>
+					<input
+						type="text"
+						placeholder="Enter the phone Number to update"
+						required
+						name="number"
+						class="update-number"
+					/>
+					<br />
+					<input type="submit" class="update-submit" />
+				</form>
+			</div>
 		</div>
+
 		<script src="/main.js"></script>
 	</body>
 </html>

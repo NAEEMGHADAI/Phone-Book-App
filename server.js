@@ -34,23 +34,6 @@ app.get("/", (req, res) => {
 		.catch((error) => console.error(error));
 });
 
-app.get("/api/persons", (req, res) => {
-	res.send(data);
-});
-
-app.get("/info", (req, res) => {
-	res.send(`<p>${`PhoneBook have data of ${data.length}`}</p><p>${date}</p>`);
-});
-
-app.get("/api/persons/:id", (req, res) => {
-	for (let i = 0; i < data.length; i++) {
-		if (data[i].id == req.params.id) {
-			res.status(200).send(data[i]);
-			return;
-		}
-	}
-});
-
 app.delete("/api/delete", async (req, res) => {
 	const body = req.body;
 	console.log(body);
@@ -155,3 +138,21 @@ app.put("/api/presons-update", async (req, res) => {
 app.listen(process.env.PORT || PORT, () => {
 	console.log(`Server running on port ${PORT}`);
 });
+
+//Homework Questions
+// app.get("/api/persons", (req, res) => {
+// 	res.send(data);
+// });
+
+// app.get("/info", (req, res) => {
+// 	res.send(`<p>${`PhoneBook have data of ${data.length}`}</p><p>${date}</p>`);
+// });
+
+// app.get("/api/persons/:id", (req, res) => {
+// 	for (let i = 0; i < data.length; i++) {
+// 		if (data[i].id == req.params.id) {
+// 			res.status(200).send(data[i]);
+// 			return;
+// 		}
+// 	}
+// });

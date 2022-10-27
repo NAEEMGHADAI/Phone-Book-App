@@ -5,6 +5,9 @@ const updateNumber = document.querySelector(".update-number");
 const updateSubmit = document.querySelector(".update-submit");
 const addButton = document.querySelector(".add-button");
 const form = document.querySelector(".form");
+const modal = document.getElementById("myModal");
+const modal2 = document.getElementById("myModal2");
+const span = document.querySelectorAll(".close");
 
 Array.from(editEntry).forEach((element) => {
 	element.addEventListener("click", EditFun);
@@ -38,7 +41,7 @@ async function deleteFun() {
 
 let nameUpdate = "";
 async function EditFun() {
-	formUpdate.style.display = "block";
+	modal2.style.display = "block";
 	nameUpdate = this.parentNode.childNodes[1].innerText;
 	console.log(nameUpdate);
 }
@@ -62,5 +65,23 @@ updateSubmit.addEventListener("click", async () => {
 });
 
 addButton.addEventListener("click", () => {
-	form.classList.toggle("form-post-none");
+	modal.style.display = "block";
 });
+
+// When the user clicks on <span> (x), close the modal
+
+span.forEach((element) => {
+	element.addEventListener("click", () => {
+		modal.style.display = "none";
+		modal2.style.display = "none";
+	});
+});
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+	if (event.target == modal) {
+		modal.style.display = "none";
+	}
+	if (event.target == modal2) {
+		modal2.style.display = "none";
+	}
+};
