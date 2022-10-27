@@ -23,7 +23,7 @@ tr:nth-child(even) {
 }
 
 .input,
-.update-number {
+.update-name {
 	padding: 10px 200px 10px 20px;
 	margin-bottom: 20px;
 }
@@ -86,7 +86,7 @@ form {
 
 @media only screen and (max-width: 600px) {
 	.input,
-	.update-number {
+	.update-name {
 		padding: 10px 90px 10px 20px;
 		margin-bottom: 20px;
 	}

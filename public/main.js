@@ -1,7 +1,7 @@
 const deleteEntry = document.querySelectorAll(".trash");
 const editEntry = document.querySelectorAll(".edit");
 const formUpdate = document.querySelector(".form-update");
-const updateNumber = document.querySelector(".update-number");
+const updateName = document.querySelector(".update-name");
 const updateSubmit = document.querySelector(".update-submit");
 const addButton = document.querySelector(".add-button");
 const form = document.querySelector(".form");
@@ -39,23 +39,23 @@ async function deleteFun() {
 	}
 }
 
-let nameUpdate = "";
+let numberUpdate = "";
 async function EditFun() {
 	modal2.style.display = "block";
-	nameUpdate = this.parentNode.childNodes[1].innerText;
-	console.log(nameUpdate);
+	numberUpdate = this.parentNode.childNodes[3].innerText;
+	console.log(numberUpdate);
 }
 
 updateSubmit.addEventListener("click", async () => {
-	let number = updateNumber.value;
-	if (number.length) {
-		console.log(number);
+	let name = updateName.value;
+	if (name.length) {
+		console.log(name);
 		const response = await fetch(`/api/presons-update`, {
 			method: "put",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
-				name: nameUpdate,
-				number: number,
+				name: name,
+				number: numberUpdate,
 			}),
 		});
 		const data = await response.json();

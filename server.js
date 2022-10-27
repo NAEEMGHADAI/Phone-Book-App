@@ -40,7 +40,7 @@ app.delete("/api/delete", async (req, res) => {
 
 	let record = await db
 		.collection("phone-book-entry")
-		.findOne({ name: body.name });
+		.findOne({ number: body.number });
 
 	if (!record) {
 		return res.status(400).json({
@@ -49,7 +49,7 @@ app.delete("/api/delete", async (req, res) => {
 	}
 
 	db.collection("phone-book-entry")
-		.deleteOne({ name: body.name })
+		.deleteOne({ number: body.number })
 		.then((result) => {
 			console.log(`Deletion Successful`);
 			return res.json({ message: "Delete Successful" });
@@ -68,7 +68,7 @@ app.post("/api/persons", async (req, res) => {
 
 	let record = await db
 		.collection("phone-book-entry")
-		.findOne({ name: body.name });
+		.findOne({ number: body.number });
 
 	if (record) {
 		return res.status(422).json({ error: "Entry Already exists" });
@@ -102,20 +102,20 @@ app.put("/api/presons-update", async (req, res) => {
 		});
 	}
 
-	let record = await db
-		.collection("phone-book-entry")
-		.findOne({ name: body.name });
+	// let record = await db
+	// 	.collection("phone-book-entry")
+	// 	.findOne({ number: body.number });
 
-	if (!record) {
-		return res.status(400).json({
-			error: `No Entries found`,
-		});
-	}
+	// if (!record) {
+	// 	return res.status(400).json({
+	// 		error: `No Entries found`,
+	// 	});
+	// }
 
 	db.collection("phone-book-entry")
 		.updateOne(
 			{
-				name: body.name,
+				number: body.number,
 			},
 			{
 				$set: {
